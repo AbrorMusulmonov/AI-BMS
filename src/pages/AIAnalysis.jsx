@@ -33,7 +33,7 @@ size={35}
 
 />
 
-AI Battery Intelligence
+Battery Intelligence
 
 
 </h1>
@@ -43,7 +43,7 @@ AI Battery Intelligence
 
 <p className="page-description">
 
-Artificial Intelligence based battery analysis
+API ulanishidan oldingi lokal diagnostika natijalari
 
 </p>
 
@@ -72,9 +72,9 @@ description="Excellent condition"
 
 title="Remaining Life"
 
-value="842"
+value="0.7 V"
 
-description="Predicted cycles"
+description="Maximum cell voltage delta"
 
 />
 
@@ -85,9 +85,9 @@ description="Predicted cycles"
 
 title="Weak Cell"
 
-value="Cell 7"
+value="Cell 13"
 
-description="Voltage imbalance detected"
+description="Lowest voltage: 3.5 V"
 
 />
 
@@ -119,28 +119,28 @@ AI Recommendation
 
 <li>
 
-✓ Balance Cell 7
+✓ Balance Cell 13
 
 </li>
 
 
 <li>
 
-✓ Reduce charging current
+✓ Inspect Cell 13 and Cell 15
 
 </li>
 
 
 <li>
 
-✓ Monitor temperature
+✓ Temperature is in normal range
 
 </li>
 
 
 <li>
 
-✓ Perform battery maintenance
+✓ Recheck pack after balancing
 
 </li>
 

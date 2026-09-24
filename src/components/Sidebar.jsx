@@ -56,7 +56,7 @@ return(
 <div className="logo">
 
 <h1>
-AI-BMS
+AI<span>-BMS</span>
 </h1>
 
 <p>

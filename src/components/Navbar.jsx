@@ -22,19 +22,12 @@ Battery Monitoring
 
 
 
-<div
-style={{
-display:"flex",
-alignItems:"center",
-gap:"25px"
-}}
->
+<div className="nav-actions">
 
 
-<Bell
-size={22}
-color="#555"
-/>
+<button className="notification-button" aria-label="Notifications">
+<Bell size={18}/>
+</button>
 
 
 <div className="profile">
