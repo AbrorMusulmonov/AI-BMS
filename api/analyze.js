@@ -5,6 +5,30 @@ const allowedOrigins = [
   "http://localhost:5173",
 ];
 
+let selectedModel;
+
+async function getAvailableModel(apiKey) {
+  if (selectedModel) return selectedModel;
+
+  const response = await fetch("https://api.groq.com/openai/v1/models", {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+  if (!response.ok) throw new Error("Could not load available AI models");
+
+  const { data } = await response.json();
+  const models = data.map((model) => model.id);
+  const preferredModels = [
+    "openai/gpt-oss-20b",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+    "qwen/qwen3-32b",
+  ];
+  selectedModel = preferredModels.find((model) => models.includes(model))
+    || models.find((model) => /(llama|qwen|gemma|gpt)/i.test(model) && !/(guard|whisper|tts)/i.test(model));
+
+  if (!selectedModel) throw new Error("No compatible AI model is available");
+  return selectedModel;
+}
+
 export default async function handler(request, response) {
   if (request.method !== "POST") {
     return response.status(405).json({ error: "Method not allowed" });
@@ -25,6 +49,7 @@ export default async function handler(request, response) {
   }
 
   try {
+    const model = await getAvailableModel(process.env.GROQ_API_KEY);
     const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -32,7 +57,7 @@ export default async function handler(request, response) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        model,
         temperature: 0.2,
         max_completion_tokens: 700,
         response_format: { type: "json_object" },
