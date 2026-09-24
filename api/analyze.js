@@ -50,6 +50,8 @@ export default async function handler(request, response) {
     });
 
     if (!groqResponse.ok) {
+      const providerError = await groqResponse.json().catch(() => ({}));
+      console.error("Groq request failed", groqResponse.status, providerError.error?.code, providerError.error?.message);
       return response.status(502).json({ error: "AI provider request failed" });
     }
 
