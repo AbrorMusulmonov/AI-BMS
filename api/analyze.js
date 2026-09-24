@@ -82,7 +82,17 @@ export default async function handler(request, response) {
     const result = await groqResponse.json();
     const content = result.choices[0].message.content;
     const json = content.slice(content.indexOf("{"), content.lastIndexOf("}") + 1);
-    const analysis = JSON.parse(json);
+    let analysis;
+    try {
+      analysis = JSON.parse(json);
+    } catch {
+      analysis = {
+        status: "AI tahlili tayyor",
+        summary: content.trim(),
+        risks: [],
+        recommendations: [],
+      };
+    }
     return response.status(200).json(analysis);
   } catch {
     return response.status(500).json({ error: "Analysis could not be completed" });
