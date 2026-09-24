@@ -1,8 +1,7 @@
 import {
     Battery,
     Brain,
-    Info,
-    Settings
+    Info
 } from "lucide-react";
 
 
@@ -34,13 +33,6 @@ const menu = [
         name:"About",
         path:"/about",
         icon:<Info size={22}/>
-    },
-
-
-    {
-        name:"Settings",
-        path:"#",
-        icon:<Settings size={22}/>
     }
 
 ];
