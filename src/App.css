@@ -132,6 +132,41 @@ input {
   gap: 16px;
 }
 
+.language-switch,
+.home-language {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid #e1e8e2;
+  border-radius: 10px;
+  background: #fff;
+  color: #617067;
+}
+
+.language-switch svg,
+.home-language svg {
+  margin: 0 5px;
+}
+
+.language-switch button,
+.home-language button {
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #758179;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.language-switch button.active,
+.home-language button.active {
+  background: #43a047;
+  color: #fff;
+}
+
 .notification-button {
   display: grid;
   width: 38px;
@@ -498,6 +533,12 @@ input {
     #f4f8f4;
 }
 
+.home-language {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+}
+
 .home-badge {
   padding: 8px 13px;
   border: 1px solid #d8e7da;
@@ -636,6 +677,16 @@ input {
 
 .card {
   padding: 26px;
+}
+
+.about-card {
+  display: grid;
+  gap: 18px;
+  max-width: 850px;
+  margin-top: 26px;
+  color: #65736a;
+  font-size: 15px;
+  line-height: 1.8;
 }
 
 .analyze-button {
@@ -833,6 +884,10 @@ input {
   .navbar {
     height: 62px;
     padding: 0 18px;
+  }
+
+  .language-switch svg {
+    display: none;
   }
 
   .page-container {

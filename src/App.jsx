@@ -15,6 +15,7 @@ import Home from "./pages/Home";
 import Battery from "./pages/Battery";
 import AIAnalysis from "./pages/AIAnalysis";
 import About from "./pages/About";
+import { LanguageProvider } from "./i18n/LanguageContext";
 
 
 
@@ -55,6 +56,7 @@ export default function App(){
 
 return (
 
+<LanguageProvider>
 <BrowserRouter>
 
 
@@ -126,6 +128,7 @@ element={
 
 
 </BrowserRouter>
+</LanguageProvider>
 
 
 )

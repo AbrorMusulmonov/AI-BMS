@@ -1,30 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
-import { ref, onValue } from "firebase/database";
+import { useMemo } from "react";
 import { Activity, BatteryCharging, Thermometer, Zap } from "lucide-react";
-import { database } from "../firebase/config";
 import BatteryCard from "../components/BatteryCard";
 import CellChart from "../components/CellChart";
 import { batteryCells, batteryMonitoring } from "../data/batteryData";
+import { useLanguage } from "../i18n/language";
 
 export default function Battery() {
-  const [monitoring, setMonitoring] = useState(batteryMonitoring);
-  const [cells, setCells] = useState(batteryCells);
-
-  useEffect(() => {
-    const monitoringRef = ref(database, "batteries/LiIon_16S_001/monitoring");
-    const cellRef = ref(database, "batteries/LiIon_16S_001/cells");
-    const stopMonitoring = onValue(monitoringRef, (snapshot) => {
-      if (snapshot.exists()) setMonitoring(snapshot.val());
-    });
-    const stopCells = onValue(cellRef, (snapshot) => {
-      if (snapshot.exists()) setCells(snapshot.val());
-    });
-
-    return () => {
-      stopMonitoring();
-      stopCells();
-    };
-  }, []);
+  const { language } = useLanguage();
+  const uz = language === "uz";
+  const monitoring = batteryMonitoring;
+  const cells = batteryCells;
 
   const cellStats = useMemo(() => {
     const values = Object.values(cells).map(Number);
@@ -42,11 +27,13 @@ export default function Battery() {
     <main className="page-container">
       <div className="page-header">
         <div>
-          <div className="eyebrow">Live monitoring</div>
+          <div className="eyebrow">{uz ? "Jonli monitoring" : "Live monitoring"}</div>
           <h1 className="page-title">Li-Ion 16S Battery</h1>
-          <p className="page-description">Pack holati va cell kuchlanishlari real vaqt rejimida</p>
+          <p className="page-description">
+            {uz ? "Batareya holati va cell kuchlanishlari" : "Battery status and individual cell voltages"}
+          </p>
         </div>
-        <div className="live-badge"><span /> System online</div>
+        <div className="live-badge"><span /> {uz ? "Tizim faol" : "System online"}</div>
       </div>
 
       <section className="battery-hero">
@@ -56,44 +43,46 @@ export default function Battery() {
             <span>{monitoring.soc}%</span>
           </div>
           <div>
-            <p>Battery charge</p>
-            <h2>{monitoring.soc}% available</h2>
-            <small>Estimated pack health: {monitoring.soh}%</small>
+            <p>{uz ? "Batareya zaryadi" : "Battery charge"}</p>
+            <h2>{monitoring.soc}% {uz ? "mavjud" : "available"}</h2>
+            <small>{uz ? "Taxminiy batareya sog‘ligi" : "Estimated pack health"}: {monitoring.soh}%</small>
           </div>
         </div>
         <div className="hero-metric">
           <Activity size={20} />
-          <div><span>Pack status</span><strong>Stable</strong></div>
+          <div><span>{uz ? "Batareya holati" : "Pack status"}</span><strong>{uz ? "Barqaror" : "Stable"}</strong></div>
         </div>
         <div className="hero-metric">
           <BatteryCharging size={20} />
-          <div><span>Configuration</span><strong>16S Li-Ion</strong></div>
+          <div><span>{uz ? "Konfiguratsiya" : "Configuration"}</span><strong>16S Li-Ion</strong></div>
         </div>
       </section>
 
       <section className="cards-container">
-        <BatteryCard title="State of charge" value={`${monitoring.soc}%`} type="SOC" progress={monitoring.soc} />
-        <BatteryCard title="State of health" value={`${monitoring.soh}%`} type="SOH" progress={monitoring.soh} />
-        <BatteryCard title="Pack voltage" value={`${monitoring.voltage} V`} type="Voltage" />
-        <BatteryCard title="Pack current" value={`${monitoring.current} A`} type="Current" />
-        <BatteryCard title="Temperature" value={`${String(monitoring.temperature).replace(".", ",")} °C`} icon={<Thermometer size={22} />} />
-        <BatteryCard title="Output power" value={`${monitoring.power} W`} icon={<Zap size={22} />} />
+        <BatteryCard title={uz ? "Zaryad holati" : "State of charge"} value="80%" type="SOC" progress={80} />
+        <BatteryCard title={uz ? "Batareya sog‘ligi" : "State of health"} value="98%" type="SOH" progress={98} />
+        <BatteryCard title={uz ? "Umumiy kuchlanish" : "Pack voltage"} value="64 V" type="Voltage" />
+        <BatteryCard title={uz ? "Tok kuchi" : "Pack current"} value="12 A" type="Current" />
+        <BatteryCard title={uz ? "Harorat" : "Temperature"} value="24,5 °C" icon={<Thermometer size={22} />} />
+        <BatteryCard title={uz ? "Chiqish quvvati" : "Output power"} value="768 W" icon={<Zap size={22} />} />
       </section>
 
       <section className="dashboard-grid">
-        <CellChart cells={cells} />
+        <CellChart cells={cells} language={language} />
         <aside className="cell-summary">
           <div>
-            <span className="section-kicker">Cell diagnostics</span>
-            <h2>Pack summary</h2>
+            <span className="section-kicker">{uz ? "Cell diagnostikasi" : "Cell diagnostics"}</span>
+            <h2>{uz ? "Batareya xulosasi" : "Pack summary"}</h2>
           </div>
-          <div className="summary-row"><span>Highest voltage</span><strong>{cellStats.max.toFixed(1)} V</strong></div>
-          <div className="summary-row"><span>Lowest voltage</span><strong>{cellStats.min.toFixed(1)} V</strong></div>
-          <div className="summary-row"><span>Voltage delta</span><strong className="warning-value">{cellStats.delta.toFixed(1)} V</strong></div>
-          <div className="summary-row"><span>Weakest cell</span><strong>Cell {cellStats.weakCell}</strong></div>
+          <div className="summary-row"><span>{uz ? "Eng yuqori kuchlanish" : "Highest voltage"}</span><strong>{cellStats.max.toFixed(1)} V</strong></div>
+          <div className="summary-row"><span>{uz ? "Eng past kuchlanish" : "Lowest voltage"}</span><strong>{cellStats.min.toFixed(1)} V</strong></div>
+          <div className="summary-row"><span>{uz ? "Kuchlanish farqi" : "Voltage delta"}</span><strong className="warning-value">{cellStats.delta.toFixed(1)} V</strong></div>
+          <div className="summary-row"><span>{uz ? "Eng zaif cell" : "Weakest cell"}</span><strong>Cell {cellStats.weakCell}</strong></div>
           <div className="status-note">
-            <span>Attention needed</span>
-            Cell {cellStats.weakCell} boshqa cellarga nisbatan past. Balanslash tavsiya etiladi.
+            <span>{uz ? "E’tibor talab qilinadi" : "Attention needed"}</span>
+            {uz
+              ? `Cell ${cellStats.weakCell} boshqa cellarga nisbatan past. Balanslash tavsiya etiladi.`
+              : `Cell ${cellStats.weakCell} is lower than the other cells. Balancing is recommended.`}
           </div>
         </aside>
       </section>

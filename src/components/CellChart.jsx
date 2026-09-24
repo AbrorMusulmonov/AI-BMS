@@ -9,7 +9,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function CellChart({ cells }) {
+export default function CellChart({ cells, language = "en" }) {
+  const uz = language === "uz";
   const data = Object.entries(cells).map(([cell, voltage]) => ({
     name: `C${cell}`,
     voltage: Number(voltage),
@@ -19,10 +20,10 @@ export default function CellChart({ cells }) {
     <div className="chart-container">
       <div className="chart-heading">
         <div>
-          <span className="section-kicker">16 cell overview</span>
-          <h2 className="chart-title">Cell voltages</h2>
+          <span className="section-kicker">{uz ? "16 ta cell ko‘rinishi" : "16 cell overview"}</span>
+          <h2 className="chart-title">{uz ? "Cell kuchlanishlari" : "Cell voltages"}</h2>
         </div>
-        <div className="chart-legend"><span /> Normal range</div>
+        <div className="chart-legend"><span /> {uz ? "Normal diapazon" : "Normal range"}</div>
       </div>
       <ResponsiveContainer width="100%" height={340}>
         <BarChart data={data} margin={{ top: 10, right: 5, left: -20, bottom: 0 }}>

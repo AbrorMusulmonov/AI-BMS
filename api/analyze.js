@@ -43,7 +43,7 @@ export default async function handler(request, response) {
     return response.status(503).json({ error: "AI service is not configured" });
   }
 
-  const { monitoring, cells } = request.body || {};
+  const { monitoring, cells, language = "uz" } = request.body || {};
   if (!monitoring || !cells || Object.keys(cells).length !== 16) {
     return response.status(400).json({ error: "Invalid battery data" });
   }
@@ -63,7 +63,7 @@ export default async function handler(request, response) {
         messages: [
           {
             role: "system",
-            content: "You are a battery diagnostics assistant. Analyze the supplied 16S Li-Ion battery telemetry. Return only JSON with keys status, summary, risks, recommendations. status and summary are strings. risks and recommendations are arrays of concise strings. Use Uzbek language. Do not claim certainty or replace professional inspection.",
+            content: `You are a battery diagnostics assistant. Analyze the supplied 16S Li-Ion battery telemetry. Return only JSON with keys status, summary, risks, recommendations. status and summary are strings. risks and recommendations are arrays of concise strings. Use ${language === "en" ? "English" : "Uzbek"} language. Do not claim certainty or replace professional inspection.`,
           },
           {
             role: "user",
