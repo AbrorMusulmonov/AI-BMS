@@ -638,6 +638,140 @@ input {
   padding: 26px;
 }
 
+.analyze-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 11px;
+  background: #3b9c44;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(59, 156, 68, 0.2);
+}
+
+.analyze-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+.analysis-error {
+  margin-top: 18px;
+  padding: 13px 16px;
+  border: 1px solid #f1cdb3;
+  border-radius: 11px;
+  background: #fff7f1;
+  color: #aa551d;
+  font-size: 12px;
+}
+
+.analysis-panel {
+  margin-top: 18px;
+  padding: 25px;
+  border: 1px solid #e3e9e4;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(31, 55, 38, 0.04);
+}
+
+.analysis-summary {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 23px;
+  border-bottom: 1px solid #e9eee9;
+}
+
+.analysis-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 13px;
+  background: #e8f5e9;
+  color: #399542;
+}
+
+.analysis-summary span {
+  color: #43a047;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.analysis-summary h2 {
+  margin-top: 3px;
+  color: #203026;
+  font-size: 21px;
+}
+
+.analysis-summary p {
+  margin-top: 6px;
+  color: #718077;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.analysis-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding-top: 22px;
+}
+
+.analysis-columns h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2b3b30;
+  font-size: 14px;
+}
+
+.analysis-columns h3 svg {
+  color: #43a047;
+}
+
+.analysis-columns ul {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 14px;
+  list-style: none;
+}
+
+.analysis-columns li {
+  position: relative;
+  padding-left: 15px;
+  color: #6e7d73;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.analysis-columns li::before {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #63bd69;
+  content: "";
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 1100px) {
   .battery-hero {
     grid-template-columns: 1fr 1fr;
@@ -713,6 +847,7 @@ input {
   .battery-hero,
   .cards-container,
   .ai-grid,
+  .analysis-columns,
   .recommendation ul {
     grid-template-columns: 1fr;
   }

@@ -1,0 +1,62 @@
+import process from "node:process";
+
+const allowedOrigins = [
+  "https://ai-bms-five.vercel.app",
+  "http://localhost:5173",
+];
+
+export default async function handler(request, response) {
+  if (request.method !== "POST") {
+    return response.status(405).json({ error: "Method not allowed" });
+  }
+
+  const origin = request.headers.origin;
+  if (origin && !allowedOrigins.includes(origin) && !origin.endsWith(".vercel.app")) {
+    return response.status(403).json({ error: "Origin not allowed" });
+  }
+
+  if (!process.env.GROQ_API_KEY) {
+    return response.status(503).json({ error: "AI service is not configured" });
+  }
+
+  const { monitoring, cells } = request.body || {};
+  if (!monitoring || !cells || Object.keys(cells).length !== 16) {
+    return response.status(400).json({ error: "Invalid battery data" });
+  }
+
+  try {
+    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.2,
+        max_completion_tokens: 700,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: "You are a battery diagnostics assistant. Analyze the supplied 16S Li-Ion battery telemetry. Return only JSON with keys status, summary, risks, recommendations. status and summary are strings. risks and recommendations are arrays of concise strings. Use Uzbek language. Do not claim certainty or replace professional inspection.",
+          },
+          {
+            role: "user",
+            content: JSON.stringify({ monitoring, cells }),
+          },
+        ],
+      }),
+    });
+
+    if (!groqResponse.ok) {
+      return response.status(502).json({ error: "AI provider request failed" });
+    }
+
+    const result = await groqResponse.json();
+    const analysis = JSON.parse(result.choices[0].message.content);
+    return response.status(200).json(analysis);
+  } catch {
+    return response.status(500).json({ error: "Analysis could not be completed" });
+  }
+}
