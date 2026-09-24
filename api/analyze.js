@@ -60,7 +60,6 @@ export default async function handler(request, response) {
         model,
         temperature: 0.2,
         max_completion_tokens: 700,
-        response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
@@ -81,7 +80,9 @@ export default async function handler(request, response) {
     }
 
     const result = await groqResponse.json();
-    const analysis = JSON.parse(result.choices[0].message.content);
+    const content = result.choices[0].message.content;
+    const json = content.slice(content.indexOf("{"), content.lastIndexOf("}") + 1);
+    const analysis = JSON.parse(json);
     return response.status(200).json(analysis);
   } catch {
     return response.status(500).json({ error: "Analysis could not be completed" });
